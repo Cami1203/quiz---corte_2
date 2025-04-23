@@ -11,7 +11,7 @@ const client = new Client({
         rejectUnauthorized: false                
     }
 });
-// mensajes los cuales me arrojaran en caso de que haya un error, o, por lo contario, se hizo la conexion exitosamentes
+// mensajes los cuales me arrojaran en caso de que haya un error, o, por lo contario, se hizo la conexion exitosamente
 client.connect((error) => {
     if (error) {
         console.log('Error conectando con la base de datos:', error);

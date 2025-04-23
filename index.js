@@ -14,110 +14,110 @@ app.get('/api/prueba', (req, res) => {
     res.send('API funcionando correctamente');
 });
 
-// de aqui en adelante son las APIS para el CRUD DE PERSONA
+// de aqui en adelante son las APIS para el CRUD DE Restaurante
 
-// Crear persona
-app.post('/api/persona', async (req, res) => {
-    const { nombre, apellido1, apellido2, dni } = req.body;
+// Crear restaurante
+app.post('/api/restaurante', async (req, res) => {
+    const { id_rest, nombre, ciudad, direccion, fecha_apertura } = req.body;
     try {
         await client.query(
-            'INSERT INTO persona (nombre, apellido1, apellido2, dni) VALUES ($1, $2, $3, $4)',
-            [nombre, apellido1, apellido2, dni]
+            'INSERT INTO Restaurante (id_rest, nombre, ciudad, direccion, fecha_apertura) VALUES ($1, $2, $3, $4, $5)',
+            [id_rest, nombre, ciudad, direccion, fecha_apertura]
         );
-        res.status(201).json({ success: true, message: 'Persona registrada' });
+        res.status(201).json({ success: true, message: 'Restaurante creado' });
     } catch (error) {
         res.status(500).json({ success: false, error: error.message });
     }
 });
 
-// Obtener personas
-app.get('/api/persona', async (req, res) => {
+// Obtener todos los restaurantes
+app.get('/api/restaurante', async (req, res) => {
     try {
-        const result = await client.query('SELECT * FROM persona');
+        const result = await client.query('SELECT * FROM Restaurante');
         res.json(result.rows);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// Actualizar persona
-app.put('/api/persona/:id', async (req, res) => {
+// Actualizar restaurante
+app.put('/api/restaurante/:id', async (req, res) => {
     const { id } = req.params;
-    const { nombre, apellido1, apellido2, dni } = req.body;
-    try {
-        const result = await client.query(
-            'UPDATE persona SET nombre=$1, apellido1=$2, apellido2=$3, dni=$4 WHERE id=$5',
-            [nombre, apellido1, apellido2, dni, id]
-        );
-        res.json({ success: true, message: 'Persona actualizada' });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Eliminar persona
-app.delete('/api/persona/:id', async (req, res) => {
-    const { id } = req.params;
-    try {
-        await client.query('DELETE FROM persona WHERE id=$1', [id]);
-        res.json({ success: true, message: 'Persona eliminada' });
-    } catch (error) {
-        res.status(500).json({ error: error.message });
-    }
-});
-
-// Y DE AQUI EN ADELANTE SON LAS APIS PARA EL CRUD DE LA TABLA COCHE
-
-// Crear coche
-app.post('/api/coche', async (req, res) => {
-    const { matricula, marca, modelo, caballos, persona_id } = req.body;
+    const { nombre, ciudad, direccion, fecha_apertura } = req.body;
     try {
         await client.query(
-            'INSERT INTO coche (matricula, marca, modelo, caballos, persona_id) VALUES ($1, $2, $3, $4, $5)',
-            [matricula, marca, modelo, caballos, persona_id]
+            'UPDATE Restaurante SET nombre=$1, ciudad=$2, direccion=$3, fecha_apertura=$4 WHERE id_rest=$5',
+            [nombre, ciudad, direccion, fecha_apertura, id]
         );
-        res.status(201).json({ success: true, message: 'Coche registrado' });
+        res.json({ success: true, message: 'Restaurante actualizado' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// Obtener coches
-app.get('/api/coche', async (req, res) => {
+// Eliminar restaurante
+app.delete('/api/restaurante/:id', async (req, res) => {
+    const { id } = req.params;
     try {
-        const result = await client.query('SELECT * FROM coche');
+        await client.query('DELETE FROM Restaurante WHERE id_rest=$1', [id]);
+        res.json({ success: true, message: 'Restaurante eliminado' });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+// de aqui en adelante son las APIS para el CRUD DE Empleado
+
+
+// Crear empleado
+app.post('/api/empleado', async (req, res) => {
+    const { id_empleado, nombre, rol, id_rest } = req.body;
+    try {
+        await client.query(
+            'INSERT INTO Empleado (id_empleado, nombre, rol, id_rest) VALUES ($1, $2, $3, $4)',
+            [id_empleado, nombre, rol, id_rest]
+        );
+        res.status(201).json({ success: true, message: 'Empleado creado' });
+    } catch (error) {
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Obtener todos los empleados
+app.get('/api/empleado', async (req, res) => {
+    try {
+        const result = await client.query('SELECT * FROM Empleado');
         res.json(result.rows);
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// Actualizar coche
-app.put('/api/coche/:matricula', async (req, res) => {
-    const { matricula } = req.params;
-    const { marca, modelo, caballos, persona_id } = req.body;
+// Actualizar empleado
+app.put('/api/empleado/:id', async (req, res) => {
+    const { id } = req.params;
+    const { nombre, rol, id_rest } = req.body;
     try {
         await client.query(
-            'UPDATE coche SET marca=$1, modelo=$2, caballos=$3, persona_id=$4 WHERE matricula=$5',
-            [marca, modelo, caballos, persona_id, matricula]
+            'UPDATE Empleado SET nombre=$1, rol=$2, id_rest=$3 WHERE id_empleado=$4',
+            [nombre, rol, id_rest, id]
         );
-        res.json({ success: true, message: 'Coche actualizado' });
+        res.json({ success: true, message: 'Empleado actualizado' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
-// Eliminar coche
-app.delete('/api/coche/:matricula', async (req, res) => {
-    const { matricula } = req.params;
+// Eliminar empleado
+app.delete('/api/empleado/:id', async (req, res) => {
+    const { id } = req.params;
     try {
-        await client.query('DELETE FROM coche WHERE matricula=$1', [matricula]);
-        res.json({ success: true, message: 'Coche eliminado' });
+        await client.query('DELETE FROM Empleado WHERE id_empleado=$1', [id]);
+        res.json({ success: true, message: 'Empleado eliminado' });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en http://localhost:${PORT}`);
+    console.log(Servidor corriendo en http:localhost:${PORT});
 });
